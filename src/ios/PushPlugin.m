@@ -51,25 +51,25 @@
 
 -(void)initRegistration;
 {
-    NSString * registrationToken = [[FIRInstanceID instanceID] token];
-
-    if (registrationToken != nil) {
-        NSLog(@"FCM Registration Token: %@", registrationToken);
-        [self setFcmRegistrationToken: registrationToken];
-
-        id topics = [self fcmTopics];
-        if (topics != nil) {
-            for (NSString *topic in topics) {
-                NSLog(@"subscribe to topic: %@", topic);
-                id pubSub = [FIRMessaging messaging];
-                [pubSub subscribeToTopic:topic];
-            }
-        }
-
-        [self registerWithToken:registrationToken];
-    } else {
-        NSLog(@"FCM token is null");
-    }
+//    NSString * registrationToken = [[FIRInstanceID instanceID] token];
+//
+//    if (registrationToken != nil) {
+//        NSLog(@"FCM Registration Token: %@", registrationToken);
+//        [self setFcmRegistrationToken: registrationToken];
+//
+//        id topics = [self fcmTopics];
+//        if (topics != nil) {
+//            for (NSString *topic in topics) {
+//                NSLog(@"subscribe to topic: %@", topic);
+//                id pubSub = [FIRMessaging messaging];
+//                [pubSub subscribeToTopic:topic];
+//            }
+//        }
+//
+//        [self registerWithToken:registrationToken];
+//    } else {
+//        NSLog(@"FCM token is null");
+//    }
 
 }
 
@@ -79,7 +79,7 @@
 #if !TARGET_IPHONE_SIMULATOR
     // A rotation of the registration tokens is happening, so the app needs to request a new token.
     NSLog(@"The FCM registration token needs to be changed.");
-    [[FIRInstanceID instanceID] token];
+    // [[FIRInstanceID instanceID] token];
     [self initRegistration];
 #endif
 }
@@ -112,11 +112,11 @@
     NSArray* topics = [command argumentAtIndex:0];
 
     if (topics != nil) {
-        id pubSub = [FIRMessaging messaging];
-        for (NSString *topic in topics) {
-            NSLog(@"unsubscribe from topic: %@", topic);
-            [pubSub unsubscribeFromTopic:topic];
-        }
+//        id pubSub = [FIRMessaging messaging];
+//        for (NSString *topic in topics) {
+//            NSLog(@"unsubscribe from topic: %@", topic);
+//            [pubSub unsubscribeFromTopic:topic];
+//        }
     } else {
         [[UIApplication sharedApplication] unregisterForRemoteNotifications];
         [self successWithMessage:command.callbackId withMsg:@"unregistered"];
@@ -129,8 +129,8 @@
 
     if (topic != nil) {
         NSLog(@"subscribe from topic: %@", topic);
-        id pubSub = [FIRMessaging messaging];
-        [pubSub subscribeToTopic:topic];
+//        id pubSub = [FIRMessaging messaging];
+//        [pubSub subscribeToTopic:topic];
         NSLog(@"Successfully subscribe to topic %@", topic);
         [self successWithMessage:command.callbackId withMsg:[NSString stringWithFormat:@"Successfully subscribe to topic %@", topic]];
     } else {
@@ -145,8 +145,8 @@
 
     if (topic != nil) {
         NSLog(@"unsubscribe from topic: %@", topic);
-        id pubSub = [FIRMessaging messaging];
-        [pubSub unsubscribeFromTopic:topic];
+//        id pubSub = [FIRMessaging messaging];
+//        [pubSub unsubscribeFromTopic:topic];
         NSLog(@"Successfully unsubscribe from topic %@", topic);
         [self successWithMessage:command.callbackId withMsg:[NSString stringWithFormat:@"Successfully unsubscribe from topic %@", topic]];
     } else {
@@ -176,17 +176,17 @@
          addObserver:self selector:@selector(onTokenRefresh)
          name:kFIRInstanceIDTokenRefreshNotification object:nil];
 
-        [[NSNotificationCenter defaultCenter]
-         addObserver:self selector:@selector(sendDataMessageFailure:)
-         name:FIRMessagingSendErrorNotification object:nil];
+//        [[NSNotificationCenter defaultCenter]
+//         addObserver:self selector:@selector(sendDataMessageFailure:)
+//         name:FIRMessagingSendErrorNotification object:nil];
 
-        [[NSNotificationCenter defaultCenter]
-         addObserver:self selector:@selector(sendDataMessageSuccess:)
-         name:FIRMessagingSendSuccessNotification object:nil];
-
-        [[NSNotificationCenter defaultCenter]
-         addObserver:self selector:@selector(didDeleteMessagesOnServer)
-         name:FIRMessagingMessagesDeletedNotification object:nil];
+//        [[NSNotificationCenter defaultCenter]
+//         addObserver:self selector:@selector(sendDataMessageSuccess:)
+//         name:FIRMessagingSendSuccessNotification object:nil];
+//
+//        [[NSNotificationCenter defaultCenter]
+//         addObserver:self selector:@selector(didDeleteMessagesOnServer)
+//         name:FIRMessagingMessagesDeletedNotification object:nil];
 
         [self.commandDelegate runInBackground:^ {
             NSLog(@"Push Plugin register called");
@@ -297,19 +297,19 @@
             NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:path];
             fcmSenderId = [dict objectForKey:@"GCM_SENDER_ID"];
             BOOL isGcmEnabled = [[dict valueForKey:@"IS_GCM_ENABLED"] boolValue];
-
+            isGcmEnabled = false;
             NSLog(@"FCM Sender ID %@", fcmSenderId);
 
             //  GCM options
             [self setFcmSenderId: fcmSenderId];
             if(isGcmEnabled && [[self fcmSenderId] length] > 0) {
-                NSLog(@"Using FCM Notification");
-                [self setUsesFCM: YES];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if([FIRApp defaultApp] == nil)
-                        [FIRApp configure];
-                    [self initRegistration];
-                });
+//                NSLog(@"Using FCM Notification");
+//                [self setUsesFCM: YES];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    if([FIRApp defaultApp] == nil)
+//                        [FIRApp configure];
+//                    [self initRegistration];
+//                });
             } else {
                 NSLog(@"Using APNS Notification");
                 [self setUsesFCM:NO];
